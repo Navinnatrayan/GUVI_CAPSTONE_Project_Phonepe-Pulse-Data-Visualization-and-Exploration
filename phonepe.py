@@ -2,16 +2,16 @@
 
 import os
 import json
+import requests
 import psycopg2
 import pandas as pd
-import requests
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
 #aggre_transaction
 
-path1 ="C:/Users/ELCOT/Desktop/phonepe/pulse/data/aggregated/transaction/country/india/state/"
+path1 ="C:/Users/HP/Desktop/phonepe/pulse/data/aggregated/transaction/country/india/state/"
 agg_tran_list = os.listdir(path1)
 
 columns1 ={"States":[], "Years":[], "Quarter":[], "Transaction_type":[], "Transaction_count":[],"Transaction_amount":[] }
@@ -46,7 +46,7 @@ aggre_transaction["States"] = aggre_transaction["States"].str.replace("-"," ")
 aggre_transaction["States"] = aggre_transaction["States"].str.title()
 aggre_transaction['States'] = aggre_transaction['States'].str.replace("Dadra & Nagar Haveli & Daman & Diu", "Dadra and Nagar Haveli and Daman and Diu")
 
-path2 ="C:/Users/ELCOT/Desktop/phonepe/pulse/data/aggregated/user/country/india/state/"
+path2 ="C:/Users/HP/Desktop/phonepe/pulse/data/aggregated/user/country/india/state/"
 agg_user_list = os.listdir(path2)
 
 columns2 = {"States":[], "Years":[], "Quarter":[], "Brands":[],"Transaction_count":[], "Percentage":[]}
@@ -86,7 +86,7 @@ aggre_user['States'] = aggre_user['States'].str.replace("Dadra & Nagar Haveli & 
 
 #map_transaction
 
-path3 ="C:/Users/ELCOT/Desktop/phonepe/pulse/data/map/transaction/hover/country/india/state/"
+path3 ="C:/Users/HP/Desktop/phonepe/pulse/data/map/transaction/hover/country/india/state/"
 map_tran_list = os.listdir(path3)
 
 columns3 = {"States":[], "Years":[], "Quarter":[],"District":[], "Transaction_count":[],"Transaction_amount":[]}
@@ -121,7 +121,7 @@ map_transaction["States"] = map_transaction["States"].str.replace("-"," ")
 map_transaction["States"] = map_transaction["States"].str.title()
 map_transaction['States'] = map_transaction['States'].str.replace("Dadra & Nagar Haveli & Daman & Diu", "Dadra and Nagar Haveli and Daman and Diu")
 
-path4 ="C:/Users/ELCOT/Desktop/phonepe/pulse/data/map/user/hover/country/india/state/"
+path4 ="C:/Users/HP/Desktop/phonepe/pulse/data/map/user/hover/country/india/state/"
 map_user_list = os.listdir(path4)
 
 columns4 = {"States":[], "Years":[], "Quarter":[], "Districts":[], "RegisteredUser":[], "AppOpens":[]}
@@ -157,7 +157,7 @@ map_user['States'] = map_user['States'].str.replace("Dadra & Nagar Haveli & Dama
 
 #top_transaction
 
-path5 ="C:/Users/ELCOT/Desktop/phonepe/pulse/data/top/transaction/country/india/state/"
+path5 ="C:/Users/HP/Desktop/phonepe/pulse/data/top/transaction/country/india/state/"
 top_tran_list = os.listdir(path5)
 
 columns5 = {"States":[], "Years":[], "Quarter":[], "Pincodes":[], "Transaction_count":[], "Transaction_amount":[]}
@@ -192,8 +192,7 @@ top_transaction["States"] = top_transaction["States"].str.replace("-"," ")
 top_transaction["States"] = top_transaction["States"].str.title()
 top_transaction['States'] = top_transaction['States'].str.replace("Dadra & Nagar Haveli & Daman & Diu", "Dadra and Nagar Haveli and Daman and Diu")
 
-
-path6 ="C:/Users/ELCOT/Desktop/phonepe/pulse/data/top/user/country/india/state/"
+path6 ="C:/Users/HP/Desktop/phonepe/pulse/data/top/user/country/india/state/"
 top_user_list = os.listdir(path6)
 
 columns6 = {"States":[], "Years":[], "Quarter":[], "Pincodes":[], "RegisteredUser":[]}
@@ -224,6 +223,7 @@ top_user["States"] = top_user["States"].str.replace("andaman-&-nicobar-islands",
 top_user["States"] = top_user["States"].str.replace("-"," ")
 top_user["States"] = top_user["States"].str.title()
 top_user['States'] = top_user['States'].str.replace("Dadra & Nagar Haveli & Daman & Diu", "Dadra and Nagar Haveli and Daman and Diu")
+
 
 #pgsql connection
 
@@ -260,7 +260,7 @@ for index,row in aggre_transaction.iterrows():
     cursor.execute(insert_query1,values)
     mydb.commit()
 
-#aggregated user table
+    #aggregated user table
 
 create_query2 = '''CREATE TABLE if not exists aggregated_user (States varchar(50),
                                                                 Years int,
@@ -283,7 +283,7 @@ for index,row in aggre_user.iterrows():
     cursor.execute(insert_query2,values)
     mydb.commit()
 
-#map_transaction_table
+    #map_transaction_table
 
 create_query3 = '''CREATE TABLE if not exists map_transaction (States varchar(50),
                                                                 Years int,
@@ -381,7 +381,7 @@ for index,row in top_user.iterrows():
               row["RegisteredUser"])
     cursor.execute(insert_query6,values)
     mydb.commit()
-    
+
 #CREATE DATAFRAMES FROM SQL
 #sql connection
 
@@ -435,7 +435,6 @@ cursor.execute("select * from top_user")
 mydb.commit()
 table6 = cursor.fetchall()
 Top_user = pd.DataFrame(table6, columns = ("States", "Years", "Quarter", "Pincodes", "RegisteredUser"))
-
 
 def animate_all_amount():
     url = "https://gist.githubusercontent.com/jbrobst/56c13bbbf9d97d187fea01ca62ea5112/raw/e388c4cae20aa53cb5090210a42ebb9b765c0a36/india_states.geojson"
@@ -673,7 +672,6 @@ def ques10():
                 color_discrete_sequence= px.colors.sequential.Mint_r)
     return st.plotly_chart(fig_dt)
 
-
 st.set_page_config(layout= "wide")
 
 st.title("PHONEPE DATA VISUALIZATION AND EXPLORATION")
@@ -694,14 +692,12 @@ with tab1:
         st.download_button("DOWNLOAD THE APP NOW", "https://www.phonepe.com/app-download/")
 
     with col2:
-        st.video("C:\\Users\\ELCOT\\Desktop\\New folder\\phone pe\\Phone Pe Ad.mp4")
+        st.video("C:\\Users\\HP\\Downloads\\PhonePe to any app. Any app to PhonePe. Works on everything..mp4")
 
     col3,col4= st.columns(2)
     
     with col3:
-        st.video("C:\\Users\\ELCOT\\Desktop\\New folder\\phone pe\\PhonePe Motion Graphics.mp4")
-
-
+        st.video("C:\\Users\\HP\\Downloads\\Chhota sa nuskha, you don't need PIN for small payments! _ UPI Lite on PhonePe.mp4")
 
     with col4:
         st.write("**-> Easy Transactions**")
@@ -731,11 +727,10 @@ with tab1:
         st.write("**->Instantly & Free**")
 
     with col6:
-        st.video("C:\\Users\\ELCOT\\Desktop\\New folder\\phone pe\\PhonePe Motion Graphics (1).mp4")
+        st.video("C:\\Users\\HP\\Downloads\\Phone Pe Ad.mp4") 
 
-
-with tab2:
-    sel_year = st.selectbox("select the Year",("All", "2018", "2019", "2020", "2021", "2022", "2023"))
+    with tab2:
+       sel_year = st.selectbox("select the Year",("All", "2018", "2019", "2020", "2021", "2022", "2023"))
     if sel_year == "All" :
         col1, col2 = st.columns(2)
         with col1:
@@ -813,6 +808,4 @@ with tab3:
         ques9()
 
     elif ques=="Top 50 Districts With Lowest Transaction Amount":
-        ques10()
-
-        
+        ques10()       
